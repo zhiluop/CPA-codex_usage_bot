@@ -42,6 +42,18 @@ class TelegramClient:
         if not response.get("ok"):
             raise RuntimeError(f"Telegram sendMessage failed: {response}")
 
+    def set_my_commands(
+        self,
+        commands: list[dict[str, str]],
+        scope: dict[str, str] | None = None,
+    ) -> None:
+        payload: dict[str, Any] = {"commands": commands}
+        if scope:
+            payload["scope"] = scope
+        response = self.http.post_json(f"{self.base_url}/setMyCommands", payload)
+        if not response.get("ok"):
+            raise RuntimeError(f"Telegram setMyCommands failed: {response}")
+
     def answer_callback_query(
         self,
         callback_query_id: str,

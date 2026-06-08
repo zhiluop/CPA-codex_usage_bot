@@ -58,6 +58,8 @@ sudo systemctl restart cpa-codex-quota-bot
 
 `/admin` 会打开 inline 管理面板，可以添加群白名单、用户白名单、查看当前白名单。
 
+bot 启动时会自动注册 Telegram `/` 快捷命令：群组只显示 `/quota`，私聊会显示查询和帮助命令，主人私聊会额外显示管理命令。
+
 ## 维护命令
 
 ```bash

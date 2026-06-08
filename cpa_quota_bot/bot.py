@@ -21,6 +21,27 @@ HELP_TEXT = "\n".join(
     ]
 )
 
+PRIVATE_COMMANDS = [
+    {"command": "quota", "description": "查看 Codex 5h / 1w 剩余额度"},
+    {"command": "id", "description": "查看当前 chat/user id"},
+    {"command": "start", "description": "查看帮助"},
+    {"command": "help", "description": "查看帮助"},
+]
+
+OWNER_PRIVATE_COMMANDS = [
+    {"command": "quota", "description": "查看 Codex 5h / 1w 剩余额度"},
+    {"command": "id", "description": "查看当前 chat/user id"},
+    {"command": "admin", "description": "打开主人管理面板"},
+    {"command": "allow_chat", "description": "添加群/会话白名单"},
+    {"command": "allow_user", "description": "添加用户白名单"},
+    {"command": "start", "description": "查看帮助"},
+    {"command": "help", "description": "查看帮助"},
+]
+
+GROUP_COMMANDS = [
+    {"command": "quota", "description": "查看 Codex 5h / 1w 剩余额度"},
+]
+
 
 class QuotaBot:
     def __init__(
@@ -43,12 +64,33 @@ class QuotaBot:
 
     def run_forever(self) -> None:
         logging.info("quota bot started")
+        self.register_commands()
         while True:
             try:
                 self.poll_once()
             except Exception:
                 logging.exception("poll failed")
                 time.sleep(5)
+
+    def register_commands(self) -> None:
+        if not hasattr(self.telegram, "set_my_commands"):
+            return
+        try:
+            self.telegram.set_my_commands(
+                PRIVATE_COMMANDS,
+                {"type": "all_private_chats"},
+            )
+            self.telegram.set_my_commands(
+                GROUP_COMMANDS,
+                {"type": "all_group_chats"},
+            )
+            for owner_id in sorted(self.config.owner_user_ids):
+                self.telegram.set_my_commands(
+                    OWNER_PRIVATE_COMMANDS,
+                    {"type": "chat", "chat_id": owner_id},
+                )
+        except Exception:
+            logging.warning("failed to register Telegram commands", exc_info=True)
 
     def poll_once(self) -> None:
         updates = self.telegram.get_updates(
