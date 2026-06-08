@@ -128,6 +128,26 @@ ensure_app_dir() {
   git clone "$REPO_URL" "$APP_DIR"
 }
 
+refresh_app_dir_for_update() {
+  install_missing_packages
+
+  if [ -d "$APP_DIR/.git" ]; then
+    git -C "$APP_DIR" pull --ff-only
+    return
+  fi
+
+  if [ -d "$APP_DIR/cpa_quota_bot" ]; then
+    local backup_dir
+    backup_dir="${APP_DIR}.backup.$(date +%Y%m%d%H%M%S)"
+    echo "$APP_DIR 不是 git 仓库。将旧目录备份到 $backup_dir 后重新拉取 GitHub 版本。"
+    mv "$APP_DIR" "$backup_dir"
+    git clone "$REPO_URL" "$APP_DIR"
+    return
+  fi
+
+  ensure_app_dir
+}
+
 current_env_value() {
   local key="$1"
   if [ ! -f "$ENV_FILE" ]; then
@@ -182,11 +202,7 @@ install_service_file() {
 }
 
 run_checks() {
-  if [ -d "$APP_DIR/tests" ]; then
-    python3 -m unittest discover -s "$APP_DIR/tests" -t "$APP_DIR"
-  else
-    echo "未找到 tests 目录，跳过单元测试。"
-  fi
+  bash -n "$APP_DIR/scripts/install.sh"
   PYTHONPYCACHEPREFIX=/tmp/${APP_NAME}-pycache python3 -m compileall "$APP_DIR/cpa_quota_bot"
 }
 
@@ -253,12 +269,7 @@ stop_app() {
 update_app() {
   require_root
   require_systemd
-  ensure_app_dir
-  if [ -d "$APP_DIR/.git" ]; then
-    git -C "$APP_DIR" pull --ff-only
-  else
-    echo "$APP_DIR 不是 git 仓库。已跳过拉取，仅刷新服务文件。"
-  fi
+  refresh_app_dir_for_update
   install_service_file
   run_checks
   systemctl restart "$APP_NAME"
