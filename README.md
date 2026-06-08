@@ -18,7 +18,7 @@ wget -qO- https://raw.githubusercontent.com/zhiluop/CPA-codex_usage_bot/main/scr
 
 如果你已经是 root 用户，可以去掉 `sudo`。
 
-运行后会显示菜单：安装/配置、启动、停止、更新。首次部署选择 `1) 安装/配置`，脚本会把项目拉到 `/home/cpa-codex-quota-bot`，逐步询问配置，写入 `/etc/cpa-codex-quota-bot.env`，然后用 systemd 后台运行。
+运行后会显示菜单：安装/配置、启动、停止、重启、更新。首次部署选择 `1) 安装/配置`，脚本会把项目拉到 `/home/cpa-codex-quota-bot`，逐步询问配置，写入 `/etc/cpa-codex-quota-bot.env`，然后用 systemd 后台运行。
 
 ## 配置项
 
@@ -64,9 +64,10 @@ sudo systemctl restart cpa-codex-quota-bot
 # 打开管理菜单
 curl -fsSL https://raw.githubusercontent.com/zhiluop/CPA-codex_usage_bot/main/scripts/install.sh | sudo bash
 
-# 启动、停止、更新
+# 启动、停止、重启、更新
 sudo bash /home/cpa-codex-quota-bot/scripts/install.sh start
 sudo bash /home/cpa-codex-quota-bot/scripts/install.sh stop
+sudo bash /home/cpa-codex-quota-bot/scripts/install.sh restart
 sudo bash /home/cpa-codex-quota-bot/scripts/install.sh update
 
 # 查看状态和日志

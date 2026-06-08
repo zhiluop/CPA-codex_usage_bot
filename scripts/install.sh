@@ -12,7 +12,7 @@ RAW_INSTALL_URL="${RAW_INSTALL_URL:-https://raw.githubusercontent.com/zhiluop/CP
 require_root() {
   if [ "$(id -u)" -ne 0 ]; then
     echo "请用 root 运行。非 root 可使用：" >&2
-    echo "curl -fsSL ${RAW_INSTALL_URL} | sudo bash -s -- install" >&2
+    echo "curl -fsSL ${RAW_INSTALL_URL} | sudo bash" >&2
     exit 1
   fi
 }
@@ -266,6 +266,14 @@ stop_app() {
   systemctl status "$APP_NAME" --no-pager || true
 }
 
+restart_app() {
+  require_root
+  require_systemd
+  install_service_file
+  systemctl restart "$APP_NAME"
+  systemctl status "$APP_NAME" --no-pager
+}
+
 update_app() {
   require_root
   require_systemd
@@ -281,7 +289,8 @@ show_menu() {
   echo "1) 安装/配置"
   echo "2) 启动"
   echo "3) 停止"
-  echo "4) 更新"
+  echo "4) 重启"
+  echo "5) 更新"
   echo "0) 退出"
 }
 
@@ -291,6 +300,7 @@ main() {
     install|configure) install_app ;;
     start) start_app ;;
     stop) stop_app ;;
+    restart) restart_app ;;
     update) update_app ;;
     "")
       show_menu
@@ -300,14 +310,15 @@ main() {
         1) install_app ;;
         2) start_app ;;
         3) stop_app ;;
-        4) update_app ;;
+        4) restart_app ;;
+        5) update_app ;;
         0) exit 0 ;;
         *) echo "无效选择" >&2; exit 1 ;;
       esac
       ;;
     *)
-      echo "用法: bash scripts/install.sh [install|start|stop|update]" >&2
-      echo "一键安装: curl -fsSL ${RAW_INSTALL_URL} | bash -s -- install" >&2
+      echo "用法: bash scripts/install.sh [install|start|stop|restart|update]" >&2
+      echo "一键安装/管理: curl -fsSL ${RAW_INSTALL_URL} | bash" >&2
       exit 1
       ;;
   esac
