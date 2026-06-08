@@ -1,0 +1,21 @@
+[Unit]
+Description=CPA Codex Quota Telegram Bot
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+WorkingDirectory=/home/cpa-codex-quota-bot
+EnvironmentFile=/etc/cpa-codex-quota-bot.env
+ExecStart=/usr/bin/python3 -m cpa_quota_bot
+Restart=always
+RestartSec=5
+DynamicUser=true
+StateDirectory=cpa-codex-quota-bot
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=full
+ProtectHome=read-only
+
+[Install]
+WantedBy=multi-user.target

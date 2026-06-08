@@ -1,0 +1,6 @@
+[project]
+name = "cpa-codex-quota-bot"
+version = "0.1.0"
+description = "Telegram bot for querying CLIProxyAPI Codex 5h and 1w quota."
+requires-python = ">=3.9"
+dependencies = []
