@@ -2,23 +2,23 @@
 
 Telegram bot，用来在群里快速查询 CLIProxyAPI 里 Codex 账号的 5h / 1w 剩余额度。
 
-## 一键安装
+## 一键安装/管理
 
 推荐和 CLIProxyAPI 部署在同一台 VPS 上：
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/zhiluop/CPA-codex_usage_bot/main/scripts/install.sh | sudo bash -s -- install
+curl -fsSL https://raw.githubusercontent.com/zhiluop/CPA-codex_usage_bot/main/scripts/install.sh | sudo bash
 ```
 
 或者：
 
 ```bash
-wget -qO- https://raw.githubusercontent.com/zhiluop/CPA-codex_usage_bot/main/scripts/install.sh | sudo bash -s -- install
+wget -qO- https://raw.githubusercontent.com/zhiluop/CPA-codex_usage_bot/main/scripts/install.sh | sudo bash
 ```
 
 如果你已经是 root 用户，可以去掉 `sudo`。
 
-脚本会把项目拉到 `/home/cpa-codex-quota-bot`，逐步询问配置，写入 `/etc/cpa-codex-quota-bot.env`，然后用 systemd 后台运行。
+运行后会显示菜单：安装/配置、启动、停止、更新。首次部署选择 `1) 安装/配置`，脚本会把项目拉到 `/home/cpa-codex-quota-bot`，逐步询问配置，写入 `/etc/cpa-codex-quota-bot.env`，然后用 systemd 后台运行。
 
 ## 配置项
 
